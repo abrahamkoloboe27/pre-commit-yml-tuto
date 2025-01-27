@@ -1,10 +1,28 @@
-# See https://pre-commit.com for more information
-# See https://pre-commit.com/hooks.html for more hooks
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+  # Hooks pour vérifier et éviter de pousser des fichiers sensibles
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
     hooks:
-    -   id: trailing-whitespace
-    -   id: end-of-file-fixer
-    -   id: check-yaml
-    -   id: check-added-large-files
+      - id: check-added-large-files
+        args: ["--maxkb=5000"]  # Bloque les fichiers > 5 Mo (modèles, datasets)
+      - id: detect-private-key  # Détecte les clés privées et API
+      - id: end-of-file-fixer  # Fixe les fins de fichier (bonne pratique)
+      - id: trailing-whitespace  # Supprime les espaces inutiles
+      - id: check-yaml  # Vérifie la syntaxe YAML
+      - id: debug-statements  # Bloque les `print` et `pdb` dans le code
+      # - id: no-commit-to-branch  # Évite de commettre directement sur la branche principale
+      #  args: ["--branch", "main"]
+
+  # Hook pour garantir un formatage cohérent
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        language_version: python3.12.4  # Adapter à la version de Python utilisée
+
+  # Hook pour trier et organiser les imports
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        language_version: python3.12.4  # Adapter à la version de Python utilisée
